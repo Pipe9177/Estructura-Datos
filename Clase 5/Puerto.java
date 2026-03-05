@@ -7,6 +7,7 @@ public class Puerto {
     private Buque[] muelles = new Buque[5]; // Cantidad de buques que estaran en el puerto
     private Scanner sc = new Scanner(System.in); // Scanner para leer la entrada del usuario con 10 contenedores
     private Random m = new Random(); // Random para generar 90 contenedores aleatorios
+    private int buqueActivos = -1; // Variable para llevar la cuenta de los buques registrados en el puerto
 
     public void aleatorios() {
         int contador = 0; // Contador para llevar la cuenta de los contenedores generados
@@ -42,8 +43,32 @@ public class Puerto {
                 System.out.println("\nBuque: " + id + "registrado exitosamente en el Muelle " + i);
                 return; // Salir del método después de registrar el buque
             } else {
-                System.out.println("\nEl Muelle:  " + i + " ya esta ocupado por el buque con Id: " + muelles[i].getId());
+                System.out
+                        .println("\nEl Muelle:  " + i + " ya esta ocupado por el buque con Id: " + muelles[i].getId());
             }
+        }
+    }
+
+    public void seleccionar() {
+        boolean estado = false; //Aqui se verifica si hay un buque o no
+
+        for(int i = 0; i < muelles.length; i++){
+            if(muelles[i] != null){
+                System.out.println("\nBuque ubicado en el Muelle " + i + ": " + muelles[i].getId());
+                estado = true; // Si hay un buque registrado, cambiar el estado a true
+            }
+        }
+        if(!estado){ //Si no hay buques registrados, informar al usuario y retomar
+            System.out.println("\nActualmente no hay buques registrados, porfavor registrar uno");
+            return; // Salir del método si no hay buques registrados
+        }
+        System.out.print("\nIngrese el muelle que desea trabajar (0-4):");
+        int sel = sc.nextInt(); // Leer el muelle seleccionado por el usuario
+        if (sel >= 0 && sel < 10 && muelles[sel] != null){ //Verificar si el muelle seleccionado es valido
+            buqueActivos = sel; // Establecer el muelle activo para trabajar con el buque seleccionado
+            System.out.println("\nBuque " + muelles[sel].getId() + "seleccionado");
+        } else {
+            System.out.println("\nEl muelle que usted esta seleccionando se encuentra vacio");
         }
     }
 
@@ -99,7 +124,6 @@ public class Puerto {
     public void desembarcar(String destino) {
         // En este caso se necesita que el contenedor sea null para considerarlo
         // desembarcado, juntamente con el destino en el cual desembarcara
-    
 
         System.out.print("\nIngrese la fila del contenedor que desea desembarcar (0-9): ");
         int fi = sc.nextInt(); // Leer la fila del contenedor a desembarcar
@@ -118,6 +142,7 @@ public class Puerto {
             return;
         }
         patio[fi][co] = null; // Desembarcar el contenedor seleccionado al establecer su posición en null
-        System.out.println("\nContenedor desembarcado exitosamente de la fila " + fi + " y columna " + co + " con destino a " + destino);
+        System.out.println("\nContenedor desembarcado exitosamente de la fila " + fi + " y columna " + co
+                + " con destino a " + destino);
     }
 }

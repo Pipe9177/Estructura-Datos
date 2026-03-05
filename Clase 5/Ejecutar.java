@@ -2,15 +2,15 @@
 import java.util.Scanner;
 
 public class Ejecutar {
-    
+
     public static void main(String[] args) {
         Puerto puerto = new Puerto();
         Scanner sp = new Scanner(System.in);
         int opcion = 0;
 
-        while(true){
+        while (true) {
             System.out.println("\n-----Almacenar contenedores en buques disponibles----");
-            System.out.println("1. Registrar buque en el muelle");
+            System.out.println("\n1. Registrar buque en el muelle");
             System.out.println("2. Generar contenedores aleatorios");
             System.out.println("3. Mostrar patios para poder organizar los contenedores");
             System.out.println("4. Ubicar contenedores en los  lugares disponibles");
@@ -20,8 +20,7 @@ public class Ejecutar {
 
             opcion = sp.nextInt();
 
-
-            switch(opcion){
+            switch (opcion) {
                 case 1:
                     puerto.registrarBuque();
                     break;
@@ -46,10 +45,11 @@ public class Ejecutar {
                     return;
                 default:
                     System.out.println("\nOpción inválida. Por favor, ingrese una opción válida");
-                    return;
+                    // Continuar el bucle para mostrar el menú nuevamente
+                    continue;
             }
-            
-        }  
-        
+
+        }
+
     }
 }
