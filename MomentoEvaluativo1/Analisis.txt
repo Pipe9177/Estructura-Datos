@@ -1,0 +1,7 @@
+El codigo presenta una interfaz con el cual el usuario puede interactual para añadir contenedores o quitar contenedores.
+
+Ademas, cuenta con un sistema el cual mira que no se exceda el peso max del buque, tambien un sistema el cual controla la,
+la localizacion de los buques, junto con su peso; ademas de que muestra un mapa del sistema portuario junto los buques.
+
+Se presento un percance a la hora de cronometrar el destino de los contenedores, por falta de tiempo no se logro solucionar, 
+de resto todo funciona con normalidad.

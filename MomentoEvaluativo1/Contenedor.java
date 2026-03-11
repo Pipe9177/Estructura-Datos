@@ -1,9 +1,10 @@
 public class Contenedor {
 
     private int id;
-    private double peso;
+    private double peso ;
     private String origen;
     public String destino; //He añadido esta variable para que haya un registro de a donde va el contenedor
+   
     
     
     public Contenedor(int id, double peso, String origen, String destino) {
@@ -11,6 +12,7 @@ public class Contenedor {
         this.peso = peso;
         this.origen = origen;
         this.destino = destino;
+       
     }
 
 
@@ -59,6 +61,8 @@ public class Contenedor {
         return "Contenedor [id=" + id + ", peso=" + peso + ", origen=" + origen + ", destino=" + destino + "]";
     }
 
+
+    
     
     
 }

@@ -48,11 +48,13 @@ public class Puerto {
                 String origen = sc.next(); // Leer el origen del buque
 
                 muelles[i] = new Buque(id, capacidad, origen); // Crear un nuevo buque y agregarlo al muelle
-                System.out.println("\nBuque: " + id + " registrado exitosamente en el Muelle " + i + " con capacidad de " + capacidad + " toneladas y origen en: " + origen);
+                System.out.println("\nBuque: " + id + " registrado exitosamente en el Muelle " + i
+                        + " con capacidad de " + capacidad + " toneladas y origen en: " + origen);
                 return; // Salir del método después de registrar el buque
             } else {
                 System.out
-                        .println("\nEl Muelle:  " + i + " ya esta ocupado por el buque con Id: " + muelles[i].getId() + " con lugar de partida: " + muelles[i].getOrigen());
+                        .println("\nEl Muelle:  " + i + " ya esta ocupado por el buque con Id: " + muelles[i].getId()
+                                + " con lugar de partida: " + muelles[i].getOrigen());
             }
         }
     }
@@ -62,7 +64,8 @@ public class Puerto {
 
         for (int i = 0; i < muelles.length; i++) {
             if (muelles[i] != null) {
-                System.out.println("\nBuque " + muelles[i].getId() + " ubicado en el Muelle: " + i + " con lugar de partida: " + muelles[i].getOrigen());
+                System.out.println("\nBuque " + muelles[i].getId() + " ubicado en el Muelle: " + i
+                        + " con lugar de partida: " + muelles[i].getOrigen());
                 estado = true; // Si hay un buque registrado, cambiar el estado a true
             }
         }
@@ -71,29 +74,30 @@ public class Puerto {
             return; // Salir del método si no hay buques registrados
         }
 
-        if(this.buqueActivos != -1){
+        if (this.buqueActivos != -1) {
             System.out.println("\n-----AVISO------");
             System.out.println("Cuentas actualmente con el Buque:" + muelles[buqueActivos].getId() + " seleccionado");
-            System.out.print("\nDesea cambiar de buque? Presione ( 1 ) si lo desea o presione ( 2 ) si desea continuar con el actual: ");
-            int revisar = sc.nextInt(); //Lee la decision del usuario
+            System.out.print(
+                    "\nDesea cambiar de buque? Presione ( 1 ) si lo desea o presione ( 2 ) si desea continuar con el actual: ");
+            int revisar = sc.nextInt(); // Lee la decision del usuario
 
-            if ( revisar == 1 ){
+            if (revisar == 1) {
                 System.out.println("\nEl buque " + muelles[buqueActivos].getId() + " ha sido liberado correctamente");
-                this.buqueActivos = -1; //Procede a liberar el buque antiguo
+                this.buqueActivos = -1; // Procede a liberar el buque antiguo
                 return; // Salir del método para seleccionar un nuevo buque
-            } else if ( revisar == 2 ){
-                    System.out.println("\nContinuando con el buque " + muelles[buqueActivos].getId() + " seleccionado");
+            } else if (revisar == 2) {
+                System.out.println("\nContinuando con el buque " + muelles[buqueActivos].getId() + " seleccionado");
                 return; // Salir del método para continuar con el buque actual
-                } else {
-                    System.out.println("\nOpcion no valida en el codigo");
-                    return; //Sale del metodo si la opcion ingresada ha sido incorrecta
-                } 
+            } else {
+                System.out.println("\nOpcion no valida en el codigo");
+                return; // Sale del metodo si la opcion ingresada ha sido incorrecta
+            }
         }
 
         System.out.print("\nIngrese el muelle que desea trabajar (0-4) o si desea regresarse ingrese (6):");
         int sel = sc.nextInt(); // Leer el muelle seleccionado por el usuario
 
-        if ( sel == 6 ){
+        if (sel == 6) {
             System.out.println("\n-------Redireccionando al menu principal---------");
             return; // Salir del método para regresar al menú principal
         }
@@ -168,16 +172,28 @@ public class Puerto {
             System.out.print("\nIngrese el Id del contenedor: ");
             int id = sc.nextInt(); // Leer el Id del contenedor
             System.out.print("Ingrese el peso del contenedor en toneladas: ");
-            double peso = sc.nextDouble(); // Leer el peso del contenedor
+            double pesoAñadido = sc.nextDouble(); // Leer el peso del contenedor
             System.out.print("Ingrese el origen del contenedor: ");
             String origen = sc.next(); // Leer el origen del contenedor
             System.out.print("Ingrese el destino del contenedor: ");
             String destino = sc.next(); // Leer el destino del contenedor
 
-            patio[fi][co] = new Contenedor(id, peso, origen, destino); // Crear un nuevo contenedor y agregarlo al patio
+            //Valida si el buque puede con la cantidad del contenedor añadido, en caso de que no, salta una alerta
+            if(muelles[buqueActivos].getPesoActual() + pesoAñadido > muelles[buqueActivos].getCapacidad()) {
+                System.out.println("\nEl peso del contenedor excede la capacidad del buque, no se puede ubicar el contenedor");
+                System.out.println("Peso actual del buque: " + (muelles[buqueActivos].getCapacidad() - muelles[buqueActivos].getPesoActual()) + " toneladas disponibles");
+                return; // Salir del método si el peso del contenedor excede la capacidad del buque
+            }
+
+
+            patio[fi][co] = new Contenedor(id, pesoAñadido, origen, destino); // Crear un nuevo contenedor y agregarlo al patio
             System.out.println("\nContenedor " + id + " ubicado exitosamente en la fila " + fi + " y columna " + co);
+            muelles[buqueActivos].pesoActual += pesoAñadido; // Actualizar el peso actual del buque al añadir el nuevo contenedor
+            System.out.println("Peso actual del buque: " + muelles[buqueActivos].getPesoActual() + " toneladas");
+            muelles[buqueActivos].setPesoActual(muelles[buqueActivos].getPesoActual() + pesoAñadido); // Actualizar el peso actual del buque al añadir el nuevo contenedor
+                
+            }
         }
-    }
 
     public void desembarcar(String destinoIngresado) {
         if (buqueActivos == -1) {
@@ -187,7 +203,7 @@ public class Puerto {
 
         Contenedor[][] patio = muelles[buqueActivos].getPatioUnico();
 
-        mostrarPatios(); //Referencia para que el usuario sepa que contenedor bajar
+        mostrarPatios(); // Referencia para que el usuario sepa que contenedor bajar
         // En este caso se necesita que el contenedor sea null para considerarlo
         // desembarcado, juntamente con el destino en el cual desembarcara
 
@@ -207,15 +223,15 @@ public class Puerto {
             System.out.println("\nNo hay contenedor en el espacio seleccionado");
             return;
         }
-        if ( patio[fi][co].destino == destinoIngresado ){
+        if (patio[fi][co].destino == destinoIngresado) {
             String destinoFinal = patio[fi][co].destino; // Obtener el destino del contenedor seleccionado
-            patio[fi][co] = null; //Procede a desembarcar el contenido del buque
-            System.out.println("\nEl contenedor que selecciono fila " + fi + " y columna " + co + " bajara hacia: " + destinoFinal);
+            patio[fi][co] = null; // Procede a desembarcar el contenido del buque
+            System.out.println("\nEl contenedor que selecciono fila " + fi + " y columna " + co + " bajara hacia: "
+                    + destinoFinal);
             return;
         } else {
-            System.out.println("\nEl contenedor seleccionado no va hacia el destino ingresado: " + destinoIngresado);
-            System.out.println("El contenedor seleccionado tiene como destino: " + patio[fi][co].destino);
-            return; //Sale del metodo si se equivoco de contenedor o destino
+            System.out.println("\nEl contenedor seleccionado no tiene el destino ingresado");
+            return;
         }
     }
 }
