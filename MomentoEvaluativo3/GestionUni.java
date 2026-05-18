@@ -37,26 +37,17 @@ public class GestionUni {
             //Contamos con un bucle que recorre todo el archivo fila a fila hasta llegar a null
             while((linea = lector.readLine()) != null){
               //Si esta vacia o no tiene linea divisoria marcar error
-              if (linea.trim().isEmpty() || !linea.contains(',')){
+              if (linea.indexOf(',') == -1){
                 throw new ArchivoInvalidoException("Error: El archivo CSV no tiene el formato correcto. Asegúrese de que cada línea contenga datos separados por comas.");
               }
-
-              String[] campos = linea.split(","); // Divide la línea en campos utilizando la coma como delimitador
-              String idEstu = campos[0].trim(); // El primer campo es el ID del estudiante
-              String codigoMateria = campos[1].trim(); // El segundo campo es el código de la materia
-
-              System.out.println("Procesando inscripcion: Estudiante ID: " + idEstu + " en materia: " + codigoMateria);
               procesados++;
-
             }
 
             System.out.println("\nArchivo CSV procesado correctamente. Total de inscripciones procesadas: " + procesados);
 
-        } catch (java.io.FileNotFoundException e) {
+        } catch (Exception e) {
             throw new ArchivoNoEncontradoException("Error: El archivo CSV no se encontró en la ruta especificada: " + rutaArchivo); // Lanza una excepción personalizada si el archivo no se encuentra
-        } catch (java.io.IOException e) {
-            throw new ArchivoInvalidoException("Error: No se pudo leer el archivo CSV. Asegúrese de que el archivo esté en el formato correcto y sea accesible."); // Lanza una excepción personalizada para errores de lectura
-        }
+        } 
     }
 
     //Crear materia ( case 5 )
@@ -75,8 +66,7 @@ public class GestionUni {
             throw new Exception("ERROR: La materia con codigo " + codigoReque + " no se encuentra en el sistema.");
         }
 
-        Materia materia = mapaMaterias.get(codigoMateria); 
-        materia.agregarRequisito(codigoReque);
+        mapaMaterias.get(codigoMateria).agregarRequisito(codigoReque);
         System.out.println("\nRequisito {" + codigoReque + "} agregado correctamente a la materia {" + codigoMateria + "}");
     }
 
@@ -87,26 +77,17 @@ public class GestionUni {
             throw new Exception("ERROR: La materia con codigo " + codigoMateria + " no se encuentra en el sistema.");
         }
 
-        Materia materia = mapaMaterias.get(codigoMateria);
-        LinkedList<String> requisitos = materia.getRequisitos(); // Obtiene la lista de requisitos de la materia
-        System.out.println("\nRequisitos para la materia {" + codigoMateria + "}:");
-            if (requisitos.isEmpty()){
-                System.out.println("La materia no cuenta con pre-requisitos.");
-            } else {
-                for (String requi : requisitos){
-                    Materia lista = mapaMaterias.get(requi); // Obtiene el nombre de la materia requisito a partir de su código
-                    System.out.println(" - {" + requi + "} - " + lista.getNombreMate());
-                }
-            }
+        LinkedList<String> requisitos = mapaMaterias.get(codigoMateria).getPreRequisitos();
+        System.out.println("\nRequisitos para la materia {" + codigoMateria + "} son: " + requisitos);
         }
 
     // Inscribir estudiante a materia ( case 8 )
-    public void estudianteMateria(String idEstudiante, String codigoMateria) throws EstudianteNoEncontradoException{
+    public void estudianteMateria(String idEstudiante, String codigoMateria) throws EstudianteNoEncontradoException, PreRequisitoNoAprobadoException, CupoLlenoException, Exception{
             if (!mapaEstudiantes.containsKey(idEstudiante)){
-                throw new EstudianteNoEncontradoException("LASTIMOSAMENTE EL ESTUDIANTE NO HA SIDO ENCONTRADO.");
+                throw new EstudianteNoEncontradoException("LASTIMOSAMENTE EL ESTUDIANTE " + idEstudiante + " NO HA SIDO ENCONTRADO.");
             }
             if (!mapaMaterias.containsKey(codigoMateria)){
-                throw new EstudianteNoEncontradoException("EL ESTUDIANTE NO ESTA EN ESTA MATERIA REGISTRADO.");
+                throw new Exception("LA MATERIA NO EXISTE");
             }
 
             Estudiante estudiante = mapaEstudiantes.get(idEstudiante);
@@ -121,15 +102,14 @@ public class GestionUni {
 
             //Verificacion de que haya cupos disponibles en la materia
             if (!materia.verificarCupo()){
-                colaEspera.add("INSCRIPCION: " + idEstudiante + ", " + codigoMateria); // Si no hay cupos, agrega al estudiante a la cola de espera
-                throw new CupoLlenoException("LAMENTAMOS INFORMARLE: La materia: " + materia.getNombreMate() + " se encuentra llena.");
+                colaEspera("INSCRIPCION: " + idEstudiante + ", " + codigoMateria);
+                throw new CupoLlenoException("CUPO AGOTADO: Procesado por la cola de espera.")
             }
 
             //Si cumple con los requisitos y hay cupo, inscribir al estudiante
             materia.getInscritos().add(idEstudiante); // Agrega el ID del estudiante a la lista de inscritos de la materia
             pilaDeshacer.push("INSCRIPCION EXITOSA: " + idEstudiante + ", " + codigoMateria);
             System.out.println("\nEl estudiante con ID: " + idEstudiante + " ha sido inscrito exitosamente en la materia: " + materia.getNombreMate());
-
 
         }
 
@@ -150,28 +130,28 @@ public class GestionUni {
         
             //Cola de espera ( case 10 )
             if (!colaEspera.isEmpty()){
-                String solicitud = colaEspera.poll(); // Obtiene la siguiente solicitud en la cola de espera
+                String solicitudPendiente = colaEspera.poll(); // Obtiene la siguiente solicitud en la cola de espera
                 String[] partes = solicitud.split(":"); // Divide la solicitud en partes utilizando ":" como delimitador
                 String[] datos = partes[1].split(","); // Divide los datos de la solicitud en partes utilizando "," como delimitador
-                String idEstu = datos[0];
-                String codMate = datos[1];
+                String idSiguiente = datos[0];
+                String codSiguiente = datos[1];
 
-                if (codMate.equals(codigoMateria)){ // El equals sirve para comparar el código de la materia de la solicitud con el código de la materia que se acaba de liberar
+                if (codSiguiente.equals(codigoMateria)){ // El equals sirve para comparar el código de la materia de la solicitud con el código de la materia que se acaba de liberar
                     System.out.println("\n-----COLA DE ESPERA-----");
-                    materia.getInscritos().add(idEstu); // Inscribe al estudiante que estaba en la cola de espera
-                    System.out.println("El estudiante con ID: " + idEstu + " ha sido inscrito exitosamente en la materia: " + materia.getNombreMate() + " desde la cola de espera.");
+                    materia.getInscritos().add(idSiguiente); // Inscribe al estudiante que estaba en la cola de espera
+                    System.out.println("El estudiante con ID: " + idSiguiente + " ha sido inscrito exitosamente en la materia: " + materia.getNombreMate() + " desde la cola de espera.");
                 } else {
-                    colaEspera.add(solicitud); // Si el código de la materia no coincide, vuelve a agregar la solicitud al final de la cola de espera
+                    colaEspera.add(solicitudPendiente); // Si el código de la materia no coincide, vuelve a agregar la solicitud al final de la cola de espera
                 }
             }
         }
 
     // Registrar estudiante ( case 1 )
     public void agregarEstudiante(Estudiante estudiante) {
-        mapaEstudiantes.put(estudiante.getId(), estudiante);
+        mapaEstudiantes.put(estudiante.getId(), estudiante.getNombre());
         pilaDeshacer.push("Agregar estudiante: " + estudiante.getNombre() + " ID: " + estudiante.getId());
         pilaRehacer.clear(); // Limpiar la pila de rehacer al realizar una nueva acción
-        System.out.println("Estudiante agregado correctamente");
+        System.out.println("Estudiante agregado correctamente en el HashMap");
 
     }
 
@@ -189,11 +169,10 @@ public class GestionUni {
         if (mapaEstudiantes.isEmpty()){ //Verifica si el mapa esta vacio
             System.out.println("LASTIMOSAMENTE: No hay estudiantes registrados");
             return;
-        } else {
+        } 
             for (Estudiante estudiante : mapaEstudiantes.values()){ // Muestra la lista de estudiantes registrados
                 System.out.println("\n------LISTA DE ESTUDIANTES------");
                 estudiante.mostrarInformacion(); // Llama al método mostrarInformación de cada estudiante para mostrar sus detalles
-            }
             }
         }
 
@@ -202,12 +181,11 @@ public class GestionUni {
         if(!mapaEstudiantes.containsKey(id)) { // Verifica si el estudiante existe en el mapa
             throw new EstudianteNoEncontradoException("Error: Estudiante con ID " + id + " no encontrado."); // Lanza una excepción si no se encuentra el estudiante
             return;
-        } else {
-            Estudiante eliminado = mapaEstudiantes.remove(id);
+        } 
+            mapaEstudiantes.remove(id);
             pilaDeshacer.push("Eliminar estudiante: " + eliminado.getNombre() + " ID: " + eliminado.getId());
             System.out.println("\nEstudiante eliminado de la universidad debido a: BAJA ACADEMICA");
         }
-    }
 
     // Obtener un salón específico ( case 11 )
     public GestionHora obtenerSalon(int salon) throws Exception{
@@ -225,17 +203,22 @@ public class GestionUni {
         }
     }
 
-    // Método auxiliar para el menú que lista las llaves del TreeMap
-    public void mostrarSalonDisponibles() {
-        System.out.print("Salones en el TreeMap: ");
-        for (Integer numero : inventarioSalon.keySet()) { 
-            System.out.print("[" + numero + "] "); 
-        }
-        System.out.println();
+
+    public void mostrarColaEspera(String solicitud) {
+       if(colaEspera.size() >= 10){
+        System.out.println("SE ENCUENTRA LLENA LA COLA DE ESPERA");
+       } else {
+        colaEspera.add(solicitud);
+        System.out.println("Estudiante asignado a la cola de espera");
+       }
     }
 
-    public void mostrarColaEspera() {
-        System.out.println("Cola de espera de inscripciones actual: " + colaEspera); 
+    public void mostrarCola(){
+        if (colaEspera.isEmpty()) {
+            System.out.println("NO HAY ESTUDIANTES EN LA COLA DE ESPERA");
+        } else {
+            System.out.println("COLA DE ESPERA ACTUAL: " + colaEspera);
+        }
     }
 
 
@@ -268,25 +251,24 @@ public class GestionUni {
     }
 
     // Deshacer ( case 19 )
-    public void deshacer() throws Exception{
+    public void deshacer() throws PilaDeshacerVaciaException{
         if (pilaDeshacer.isEmpty()){
-            throw new Exception("No hay acciones para deshacer");
-        } else {
+            throw new PilaDeshacerVaciaException("No hay acciones para deshacer");
+        } 
             String accionDes = pilaDeshacer.pop(); // Deshace la ultima accion realizada
             pilaRehacer.push(accionDes); // Agrega la accion deshecha a la pila de rehacer
             System.out.println("Accion deshecha: " + accionDes + " correctamente");
         }
-    }
+    
 
     //Rehacer ( case 20 )
-    public void rehacer() throws Exception{
+    public void rehacer() throws PilaDeshacerVaciaException{
         if (pilaRehacer.isEmpty()){
-            throw new Exception("NO HAY ACCION REALIZADA ANTERIORMENTE PARA REHACER");
-        } else {
+            throw new PilaDeshacerVaciaException("NO HAY ACCION REALIZADA ANTERIORMENTE PARA REHACER");
+        } 
             String accionRes = pilaRehacer.pop();
             pilaDeshacer.push(accionRes);
             System.out.println("Accion rehecha: " + accionRes + " correctamente");
-        }
     }
 }
     
