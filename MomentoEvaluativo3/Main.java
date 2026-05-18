@@ -2,6 +2,7 @@ package MomentoEvaluativo3;
 
 import java.util.Scanner;
 
+//Renombrado por problemas de compilacion ( ejecutar.java -> main.java)
 public class Main {
     public static void main(String[] args) {
         GestionUni sistema = new GestionUni(); // Conexion con gestionUni el cual es el central
