@@ -21,10 +21,10 @@ public class Main {
             System.out.println("4. Eliminar estudiante");
             System.out.println("\n----- GESTION DE MATERIAS -----");
             System.out.println("5. Crear materia");
-            System.out.println("6.  Agregar pre-requisito");
-            System.out.println("7.  Mostrar pre-requisitos");
-            System.out.println("8.  Inscribir estudiante");
-            System.out.println("9.  Cancelar inscripcion");
+            System.out.println("6. Agregar pre-requisito");
+            System.out.println("7. Mostrar pre-requisitos");
+            System.out.println("8. Inscribir estudiante");
+            System.out.println("9. Cancelar inscripcion");
             System.out.println("10. Mostrar cola de espera");
             System.out.println("\n----- GESTIÓN DE HORARIOS -----");
             System.out.println("11. Reservar horario en aula");
@@ -59,7 +59,7 @@ public class Main {
                         System.out.print("Ingrese email: ");
                         String email = scanner.nextLine();
                         System.out.print("Ingrese semestre actual: ");
-                        String semestre = scanner.nextLine();
+                        int semestre = Integer.parseInt(scanner.nextLine());
                         sistema.agregarEstudiante(nombre, id, email, semestre);
                         break;
 
@@ -75,8 +75,8 @@ public class Main {
 
                     case 4:
                         System.out.print("Ingrese ID del estudiante a dar de baja: ");
-                        String idElimi = scanner.nextLine();
-                        sistema.eliminarEstudiante(idElimi);
+                        String idEliminar = scanner.nextLine();
+                        sistema.eliminarEstudiante(idEliminar);
                         break;
 
                     case 5:
@@ -120,12 +120,12 @@ public class Main {
                         break;
                     
                     case 10:
-                        sistema.mostrarColaEspera();
+                        sistema.mostrarCola();
                         break;
                     
                     case 11:
                         System.out.print("\n-----RESERVAR HORARIO EN SALON-----");
-                        sistema.mostrarSalonDisponibles();
+                        sistema.mostrarDisponibles();
                         System.out.print("Salon: ");
                         int codSalon = Integer.parseInt(scanner.nextLine()); // codigo del salon a reservar
                         System.out.print("\nDIAS: 0. Domingo, 1. Lunes, 2. Martes, 3. Miercoles, 4. Jueves, 5. Viernes, 6. Sabado");
@@ -134,11 +134,12 @@ public class Main {
                         int hora = Integer.parseInt(scanner.nextLine());
                         System.out.print("Duracion (en horas): ");
                         int duracion = Integer.parseInt(scanner.nextLine());
-                        sistema.reservar(codSalon, dia, hora, duracion);
+                        sistema.obtenerSalon(codSalon).reserva(dia, hora, duracion);
                         break;
                     
                     case 12:
                         System.out.print("\n-----LIBERAR HORARIO EN SALON-----");
+                        sistema.mostrarDisponibles();
                         System.out.print("Salon a liberar: ");
                         int codLib = Integer.parseInt(scanner.nextLine()); //codigo del salon a liberar
                         System.out.print("Dia: ");
@@ -147,10 +148,11 @@ public class Main {
                         int horaLib = Integer.parseInt(scanner.nextLine());
                         System.out.print("Duracion (en horas): ");
                         int duracionLib = Integer.parseInt(scanner.nextLine());
-                        sistema.obtenerSalon(codLib).liberar(diaLib, horaLib, horaLib + duracionLib); // Se asume que se libera por una hora, se puede modificar para liberar por mas horas
+                        sistema.obtenerSalon(codLib).liberar(diaLib, horaLib, duracionLib); // Se asume que se libera por una hora, se puede modificar para liberar por mas horas
                         break;
                      
                     case 13:
+                        sistema.mostrarDisponibles();
                         System.out.print("Salon consultado: ");
                         int salCon = Integer.parseInt(scanner.nextLine());
                         System.out.print("Dia: ");
@@ -186,12 +188,12 @@ public class Main {
                         System.out.print("Ingrese ID del estudiante: ");
                         String idNotas = scanner.nextLine();
                         System.out.print("Semestre de la nota ( 0 - 9 ) : ");
-                        int semestre = Integer.parseInt(scanner.nextLine());
+                        int semeNotas = Integer.parseInt(scanner.nextLine());
                         System.out.print("Indice de materia ( 0 - 19 ) : ");
                         int mateNotas = Integer.parseInt(scanner.nextLine());
                         System.out.print("Calificacion ( 0.0 - 5.0) : ");
                         double caliNotas = Double.parseDouble(scanner.nextLine());
-                        sistema.buscarEstudiante(idNotas).registrarNota(semestre, mateNotas, caliNotas);
+                        sistema.buscarEstudiante(idNotas).registrarNota(semeNotas, mateNotas, caliNotas);
                         System.out.println("Nota registrada exitosamente para el estudiante con ID: " + idNotas);
                         break;
                     
