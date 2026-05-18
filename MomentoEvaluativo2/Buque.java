@@ -4,7 +4,7 @@ import java.util.Stack;
 
 public class Buque {
 
-    private Stack<Contenedor> buque = new Stack<>();
+    private Stack<Contenedor> buque = new Stack<>(); // Pila para almacenar los contenedores en el buque
 
     public void cargar(Contenedor co) {
         if (buque.isEmpty() || co.getPeso() <= buque.peek().getPeso()) { // Si el buque está vacío o el peso del
