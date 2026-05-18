@@ -2,6 +2,8 @@ package MomentoEvaluativo3;
 
 import java.util.LinkedList; //Para el historial de las materias
 
+
+// Clase hija heredando la clase persona
 public class Estudiante extends Persona {
     private int semestreAct; // Semestre actual del estudiante
     private double[][] notas; // Matriz para almacenar notas por semestre del estudiante
