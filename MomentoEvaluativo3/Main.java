@@ -260,7 +260,7 @@ public class Main {
                 System.out.print("\nPresione 'ENTER' para volver a desplegar el menu.");
                 scanner.nextLine();
             }
-        } while (op != 22) {
+        } while (op != 22); {
             
         }
     }

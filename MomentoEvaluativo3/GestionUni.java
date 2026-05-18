@@ -11,7 +11,7 @@ public class GestionUni {
     private HashMap<String, Estudiante> mapaEstudiantes = new HashMap<>(); // Mapa para almacenar estudiantes con su ID
                                                                            // como clave
     private HashMap<String , Materia> mapaMaterias = new HashMap<>(); // Mapa para almacenar materias con su código como clave
-    private TreeMap<Interger, GestionHora> inventarioSalon = new TreeMap<>();
+    private TreeMap<Integer, GestionHora> inventarioSalon = new TreeMap<>();
     private Stack<String> pilaDeshacer = new Stack<>(); // Pila para almacenar acciones realizadas y permitir
                                                         // deshacerlas
     private Stack<String> pilaRehacer = new Stack<>(); // Para almacenar y rehacer lo hecho
@@ -28,17 +28,14 @@ public class GestionUni {
 
     // Método para procesar el archivo CSV de inscripciones ( case 21 )
     public void procesarCSV(String rutaArchivo) throws ArchivoNoEncontradoException {
+        System.out.println("\n------PROCESANDO ARCHIVO CSV------");
+        int procesados = 0; //Contador de control para el reporte final
         // Uso de try-with-resources para garantizar el cierre automático de los descriptores de archivos
-        try (BufferedReader lector = new BufferedReader(new FileReader(rutaArchivo)){
+        try (BufferedReader lector = new BufferedReader(new FileReader(rutaArchivo))){
             String linea; //Variable temporal para almacenar
-            int procesados = 0; // Contador de control para el reporte final
-
-            System.out.println("\n------PROCESANDO ARCHIVO CSV------");
-            //Contamos con un bucle que recorre todo el archivo fila a fila hasta llegar a null
-            while((linea = lector.readLine()) != null){
-              //Si esta vacia o no tiene linea divisoria marcar error
-              if (linea.indexOf(',') == -1){
-                throw new ArchivoInvalidoException("Error: El archivo CSV no tiene el formato correcto. Asegúrese de que cada línea contenga datos separados por comas.");
+            while ((linea = lector.readLine()) != null){ //Contamos con un bucle que recorre todo el archivo fila a fila hasta llegar a null
+              if (linea.indexOf(',') == -1){ //Si esta vacia o no tiene linea divisoria marcar error
+                throw new ArchivoInvalidoException("Error: El archivo CSV no tiene el formato correcto" + linea);
               }
               procesados++;
             }
@@ -54,7 +51,7 @@ public class GestionUni {
     public void crearMateria(String codigo, String nombreMate, int cupoMax){
         Materia nuevaMateria = new Materia(codigo, nombreMate, cupoMax);
         mapaMaterias.put(codigo, nuevaMateria);
-        System.out.println("\nMateria {" + nombreMate + "} creado correctamente con el codigo: " + codigo + " y contando con cupo Maximo de: " + cupoMax + " estudiantes.");
+        System.out.println("\nMateria [" + nombreMate + "] creado correctamente con el codigo: " + codigo + " y contando con cupo Maximo de: " + cupoMax + " estudiantes.");
     }
 
     //Pre-requisitos ( case 6 )
@@ -96,14 +93,14 @@ public class GestionUni {
             //Verificacion de que cumpla con los requisitos previos
             for (String requi : materia.getPreRequisitos()){
                 if(!estudiante.verificarAprobacion(requi)){ // Si el estudiante no ha aprobado alguno de los requisitos, lanza la excepcion
-                    throw new PreRequisitoNoAprobadoException("ERROR DE INSCRIPCION: El estudiante no ha aprobado las materias requeridas.")
+                    throw new PreRequisitoNoAprobadoException("ERROR DE INSCRIPCION: El estudiante no ha aprobado las materias requeridas.");
                 }
             }
 
             //Verificacion de que haya cupos disponibles en la materia
             if (!materia.verificarCupo()){
-                colaEspera("INSCRIPCION: " + idEstudiante + ", " + codigoMateria);
-                throw new CupoLlenoException("CUPO AGOTADO: Procesado por la cola de espera.")
+                colaEspera.add("INSCRIPCION: " + idEstudiante + ", " + codigoMateria);
+                throw new CupoLlenoException("CUPO AGOTADO: Procesado por la cola de espera.");
             }
 
             //Si cumple con los requisitos y hay cupo, inscribir al estudiante
@@ -147,9 +144,10 @@ public class GestionUni {
         }
 
     // Registrar estudiante ( case 1 )
-    public void agregarEstudiante(Estudiante estudiante) {
-        mapaEstudiantes.put(estudiante.getId(), estudiante.getNombre());
-        pilaDeshacer.push("Agregar estudiante: " + estudiante.getNombre() + " ID: " + estudiante.getId());
+    public void agregarEstudiante(String nombre, String id, String email, int semestre) {
+        Estudiante estudiante = new Estudiante(nombre, id, email, semestre);
+        mapaEstudiantes.put(estudiante.getId(), estudiante);
+        pilaDeshacer.push("Agregar estudiante: " + estudiante.getNombre + " ID: " + estudiante.getId());
         pilaRehacer.clear(); // Limpiar la pila de rehacer al realizar una nueva acción
         System.out.println("Estudiante agregado correctamente en el HashMap");
 
@@ -183,7 +181,7 @@ public class GestionUni {
             return;
         } 
             mapaEstudiantes.remove(id);
-            pilaDeshacer.push("Eliminar estudiante: " + eliminado.getNombre() + " ID: " + eliminado.getId());
+            pilaDeshacer.push("Eliminar estudiante: " + id);
             System.out.println("\nEstudiante eliminado de la universidad debido a: BAJA ACADEMICA");
         }
 
@@ -198,7 +196,7 @@ public class GestionUni {
     //Muestra SALONES disponibles
     public void mostrarDisponibles(){
         System.out.println("\n------SALONES DISPONIBLES------");
-        for (Interger salon : inventarioSalon.keySet()){
+        for (Integer salon : inventarioSalon.keySet()){
             System.out.println("Salon: " + salon + " - " + inventarioSalon.get(salon).getNombre()); // Muestra el número de salón y su nombre
         }
     }

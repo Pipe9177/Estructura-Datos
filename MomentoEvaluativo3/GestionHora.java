@@ -6,7 +6,7 @@ public class GestionHora {
 
     private String nombre;
     private boolean[][] disponibilidad; // Matriz de disponibilidad para cada hora del día y cada día de la semana
-    private String[][] dias = { "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado" };
+    private String[] dias = { "Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado" };
 
     public GestionHora(String nombre) {
 
@@ -29,7 +29,7 @@ public class GestionHora {
         //Verifica si la clase solicitada se encuentra libre (false)
         for (int i = horaRequerida; i < horaRequerida + duracion; i++){
             if (disponibilidad[diaRequerido][i] == true){ //Si la hora solicitada esta ocupada (true) lanza la excepcion
-                throw new HorarioConflictivoException("Error: La clase solicitada en ese horario se encuentra ocupada.")
+                throw new HorarioConflictivoException("Error: La clase solicitada en ese horario se encuentra ocupada.");
             }
         }
 
@@ -52,11 +52,11 @@ public class GestionHora {
         //Comprobamos si el horario que se desea liberar se encuentra ocupado
         for (int i = horaRequerida; i < horaRequerida + duracion; i ++){
             if (disponibilidad[diaRequerido][i] == false){ //En caso tal de que se encuentre libre, lanza el mensaje de excepcion
-                throw new HorarioConflictivoException("Error: la clase seleccionada ya se encuentra libre.")
+                throw new HorarioConflictivoException("Error: la clase seleccionada ya se encuentra libre.");
             }
 
             //Si se encuentra ocupado, liberar el horario y actualizar el nuevo horario
-            for (int i = horaRequerida; i < horaRequerida + duracion; i++){
+            for (i = horaRequerida; i < horaRequerida + duracion; i++){
                 if (disponibilidad[diaRequerido][i] == true){
                 System.out.println("Liberando clase en: " + dias[diaRequerido] + " " + i + ":00 -> OCUPADO"); //Muestra la clase ocupada
                 disponibilidad[diaRequerido][i] = false; //Cambia el valor de la clase a libre para no generar incrongruencias

@@ -27,7 +27,7 @@ public class Estudiante extends Persona {
         double suma = 0; // Acumula las calificaciones
         int contador = 0;
         for (int i = 0; i < 20; i++) { // 20 debido a que son las materias max del semestre
-            if (notas[semestre][i] != null) { // Comprueba si en la matriz hay una nota
+            if (notas[semestre][i] != 0.0) { // Comprueba si en la matriz hay una nota
                 suma += notas[semestre][i];
                 contador++;
             }

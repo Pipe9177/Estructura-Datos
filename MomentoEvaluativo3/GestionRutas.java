@@ -43,7 +43,7 @@ public class GestionRutas {
 
         //Distancia inicial y la distancia de origen
         for (int i = 0; i < n; i++){
-            distanciaMin[i] = Interger.MAX_VALUE; // Esta linea de codigo define la distancia inicial como infinito; para que siempre la siguiente opcion sea menor y las mas corta.
+            distanciaMin[i] = Integer.MAX_VALUE; // Esta linea de codigo define la distancia inicial como infinito; para que siempre la siguiente opcion sea menor y las mas corta.
             optimizar[i] = -1; // No hay otro camino mas corto
         }
 
@@ -60,14 +60,14 @@ public class GestionRutas {
                 }
             }
 
-            if (distanciaMin[edi] == Interger.MAX_VALUE){
+            if (distanciaMin[edi] == Integer.MAX_VALUE){
                 break; // Si no hay mas edificios alcanzables, se detiene el proceso
                 visitados[edi] = true; //Registra el edificio como ya visitado
             
             //ACTUALIZA LAS DISTANCIAS 
             for (int d = 0; d < n; d++){
                 //Procede a verificar que no haya conexiones juntamente con que sea menor la distancia 
-            if (distancias[edi][d] > 0 && !visitados[d] && distanciaMin[edi] + distancias[edi][d < distanciaMin[d]){
+            if (distancias[edi][d] > 0 && !visitados[d] && distanciaMin[edi] + distancias[edi][d] < distanciaMin[d]){
                 distanciaMin[d] = distanciaMin[edi] + distancias[edi][d]; //Actualiza la distancia minima
                 optimizar[d] = edi; //Actualiza y registra
             }
