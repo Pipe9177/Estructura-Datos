@@ -5,7 +5,7 @@ import java.util.*; //Importa todo
 import java.io.BufferedReader; //Lectura de archivos (punto 21)
 import java.io.FileReader; // Canal fisico en el archivo CSV (punto 21)
 
-//Controlador del sistema
+//Controlador del sistema en el cual se basa el main
 public class GestionUni {
 
     private HashMap<String, Estudiante> mapaEstudiantes = new HashMap<>(); // Mapa para almacenar estudiantes con su ID
