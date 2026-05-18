@@ -65,4 +65,10 @@ public class GestionHora {
             System.out.println("\nHorario actualizado: " + disponibilidad[diaRequerido][horaRequerida] + " -> LIBRE\n"); //Muestra el horario actualizado
         }
     }
+
+    // Consultar disponibilidad a una hora requerida
+    public boolean disponibilidad(int diaRequerido, int horaRequerida) {
+        return !disponibilidad[diaRequerido][horaRequerida]; // Retorna true si la clase esta libre (false en la
+                                                             // matriz), y false si esta ocupada (true en la matriz)
+    }
 }

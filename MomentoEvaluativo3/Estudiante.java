@@ -38,6 +38,17 @@ public class Estudiante extends Persona {
         }
     }
 
+    // Materia aprobada para los pre-requisitos
+    public void aprobarMateria(String materia) {
+        this.historial.add(materia); // Agrega la materia aprobada al historial del estudiante
+    }
+
+    // Corrobora que la materia este aprobada
+    public boolean verificarAprobacion(String materia) {
+        return this.historial.contains(materia); // Retorna true si el historial del estudiante contiene la materia,
+                                                 // indicando que ha sido aprobada
+    }
+
     public int getSemestreAct() {
         return semestreAct;
     }
