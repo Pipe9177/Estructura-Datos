@@ -1,5 +1,7 @@
 package MomentoEvaluativo3;
 
+
+// Clase diseñado para controlar la disponibilidad y la reserva
 public class GestionHora {
 
     private String nombre;
