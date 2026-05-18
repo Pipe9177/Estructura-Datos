@@ -2,6 +2,8 @@ package MomentoEvaluativo3;
 
 import java.util.LinkedList; // Para el historial de materias
 
+
+//Creacion de la clase para crear las materias pedidas
 public class Materia {
 
     private String codigo; //Codigo unico de la materia
