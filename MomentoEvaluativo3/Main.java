@@ -66,7 +66,11 @@ public class Main {
                     case 2:
                         System.out.print("Ingrese ID por buscar: ");
                         String idBuscar = scanner.nextLine();
+                        try{
                         sistema.buscarEstudiante(idBuscar).mostrarInformacion();
+                        } catch (java.lang.Exception e){
+                            System.out.println(e.getMessage());
+                        }
                         break;
 
                     case 3:
@@ -76,7 +80,11 @@ public class Main {
                     case 4:
                         System.out.print("Ingrese ID del estudiante a dar de baja: ");
                         String idEliminar = scanner.nextLine();
+                        try{
                         sistema.eliminarEstudiante(idEliminar);
+                        } catch (java.lang.Exception e) {
+                            System.out.println("Error al eliminar estudiante: " + e.getMessage());
+                        }
                         break;
 
                     case 5:
@@ -108,7 +116,11 @@ public class Main {
                         String idIns = scanner.nextLine(); // ID a inscribir
                         System.out.print("Ingrese codigo de la materia a inscribir: ");
                         String codIns = scanner.nextLine();
+                        try{
                         sistema.estudianteMateria(idIns, codIns);
+                        } catch (java.lang.Exception e) {
+                            System.out.println("Error al inscribir al estudiante:" + e.getMessage());
+                        }
                         break;
                     
                     case 9:
@@ -128,13 +140,17 @@ public class Main {
                         sistema.mostrarDisponibles();
                         System.out.print("Salon: ");
                         int codSalon = Integer.parseInt(scanner.nextLine()); // codigo del salon a reservar
-                        System.out.print("\nDIAS: 0. Domingo, 1. Lunes, 2. Martes, 3. Miercoles, 4. Jueves, 5. Viernes, 6. Sabado");
+                        System.out.print("\nDIAS: 0. Domingo, 1. Lunes, 2. Martes, 3. Miercoles, 4. Jueves, 5. Viernes, 6. Sabado: ");
                         int dia = Integer.parseInt(scanner.nextLine());
                         System.out.print("Hora ( 0 - 23 ): ");
                         int hora = Integer.parseInt(scanner.nextLine());
                         System.out.print("Duracion (en horas): ");
                         int duracion = Integer.parseInt(scanner.nextLine());
+                        try {
                         sistema.obtenerSalon(codSalon).reserva(dia, hora, duracion);
+                        } catch (java.lang.Exception e) {
+                            System.out.println("ERROR AL RESERVAR: " + e.getMessage());
+                        }
                         break;
                     
                     case 12:
@@ -148,7 +164,11 @@ public class Main {
                         int horaLib = Integer.parseInt(scanner.nextLine());
                         System.out.print("Duracion (en horas): ");
                         int duracionLib = Integer.parseInt(scanner.nextLine());
+                        try{
                         sistema.obtenerSalon(codLib).liberar(diaLib, horaLib, duracionLib); // Se asume que se libera por una hora, se puede modificar para liberar por mas horas
+                        } catch (java.lang.Exception e) {
+                            System.out.println("ERROR AL LIBERAR: " + e.getMessage());
+                        }
                         break;
                      
                     case 13:
@@ -193,8 +213,12 @@ public class Main {
                         int mateNotas = Integer.parseInt(scanner.nextLine());
                         System.out.print("Calificacion ( 0.0 - 5.0) : ");
                         double caliNotas = Double.parseDouble(scanner.nextLine());
+                        try{
                         sistema.buscarEstudiante(idNotas).registrarNota(semeNotas, mateNotas, caliNotas);
                         System.out.println("Nota registrada exitosamente para el estudiante con ID: " + idNotas);
+                        } catch (java.lang.Exception e){
+                            System.out.println("ERROR AL INGRESAR NOTAS" + e.getMessage());
+                        }
                         break;
                     
                     case 17:
@@ -202,8 +226,12 @@ public class Main {
                         String idRepor = scanner.nextLine(); // ID del estudiante para visualizar reportes academicos
                         System.out.print("Semestre a promediar: ");
                         int semesRepor = Integer.parseInt(scanner.nextLine());
+                        try{
                         double promedio = sistema.buscarEstudiante(idRepor).calcularPromedio(semesRepor);
                         System.out.println("El promedio del estudiante con ID " + idRepor + " en el semestre " + semesRepor + " es: " + promedio);
+                        } catch (java.lang.Exception e) {
+                            System.out.println("ERROR AL PROMEDIAR" + e.getMessage());
+                        }
                         break;
                     
                     case 18:
@@ -231,18 +259,30 @@ public class Main {
                         break;
 
                     case 19:
+                        try{
                         sistema.deshacer();
+                        } catch (java.lang.Exception e) {
+                            System.out.println("Error al deshacer: " + e.getMessage());
+                        }
                         break;
                     
                     case 20:
+                        try{
                         sistema.rehacer();
+                        } catch (java.lang.Exception e) {
+                            System.out.println("Error al rehacer: " + e.getMessage());
+                        }
                         break;
                     
                     case 21:
                         System.out.print("\n-----ARCHIVO CSV-----");
                         System.out.print("ingrese nombre del archivo ( .csv ): ");
                         String archivo = scanner.nextLine();
+                        try{
                         sistema.procesarCSV(archivo);
+                        } catch (java.lang.Exception e) {
+                            System.out.println(e.getMessage());
+                        }
                         break;
                     
                     case 22:
