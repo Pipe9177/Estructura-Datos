@@ -27,7 +27,7 @@ public class GestionUni {
     }
 
     // Método para procesar el archivo CSV de inscripciones ( case 21 )
-    public void procesarCSV(String rutaArchivo) throws ArchivoNoEncontradoException {
+    public void procesarCSV(String rutaArchivo) throws ArchivoInvalidoException, ArchivoNoEncontradoException {
         System.out.println("\n------PROCESANDO ARCHIVO CSV------");
         int procesados = 0; //Contador de control para el reporte final
         // Uso de try-with-resources para garantizar el cierre automático de los descriptores de archivos
@@ -42,9 +42,11 @@ public class GestionUni {
 
             System.out.println("\nArchivo CSV procesado correctamente. Total de inscripciones procesadas: " + procesados);
 
-        } catch (Exception e) {
+        } catch (java.io.FileNotFoundException e) {
             throw new ArchivoNoEncontradoException("Error: El archivo CSV no se encontró en la ruta especificada: " + rutaArchivo); // Lanza una excepción personalizada si el archivo no se encuentra
-        } 
+        } catch (java.io.IOException e) {
+            throw new ArchivoInvalidoException("Fallo en la lectura de lote: " + e.getMessage());
+        }
     }
 
     //Crear materia ( case 5 )
@@ -128,7 +130,7 @@ public class GestionUni {
             //Cola de espera ( case 10 )
             if (!colaEspera.isEmpty()){
                 String solicitudPendiente = colaEspera.poll(); // Obtiene la siguiente solicitud en la cola de espera
-                String[] partes = solicitud.split(":"); // Divide la solicitud en partes utilizando ":" como delimitador
+                String[] partes = solicitudPendiente.split(":"); // Divide la solicitud en partes utilizando ":" como delimitador
                 String[] datos = partes[1].split(","); // Divide los datos de la solicitud en partes utilizando "," como delimitador
                 String idSiguiente = datos[0];
                 String codSiguiente = datos[1];
@@ -147,7 +149,7 @@ public class GestionUni {
     public void agregarEstudiante(String nombre, String id, String email, int semestre) {
         Estudiante estudiante = new Estudiante(nombre, id, email, semestre);
         mapaEstudiantes.put(estudiante.getId(), estudiante);
-        pilaDeshacer.push("Agregar estudiante: " + estudiante.getNombre + " ID: " + estudiante.getId());
+        pilaDeshacer.push("Agregar estudiante: " + estudiante.getNombre() + " ID: " + estudiante.getId());
         pilaRehacer.clear(); // Limpiar la pila de rehacer al realizar una nueva acción
         System.out.println("Estudiante agregado correctamente en el HashMap");
 
@@ -178,7 +180,6 @@ public class GestionUni {
     public void eliminarEstudiante(String id) throws EstudianteNoEncontradoException{
         if(!mapaEstudiantes.containsKey(id)) { // Verifica si el estudiante existe en el mapa
             throw new EstudianteNoEncontradoException("Error: Estudiante con ID " + id + " no encontrado."); // Lanza una excepción si no se encuentra el estudiante
-            return;
         } 
             mapaEstudiantes.remove(id);
             pilaDeshacer.push("Eliminar estudiante: " + id);
