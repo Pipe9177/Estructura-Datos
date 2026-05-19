@@ -4,63 +4,63 @@ package MomentoEvaluativo3;
 
 
 //Errores en el sistema Universitario 
-class AcademicoException extends Exception {
+public class Exception extends java.lang.Exception {
     //Recibe el mensaje de error y muestra en pantalla el mensaje deseado
-    public AcademicoException (String mensaje){
+    public Exception (String mensaje){
         super(mensaje); //Llama al constructor de la clase padre (Exception) para establecer el mensaje de error
     }
 }
 
 //Excepción para manejar el caso de que un estudiante no cumpla con los requisitos previos para inscribirse en una materia
-class PreRequisitoNoAprobadoException extends AcademicoException {
+class PreRequisitoNoAprobadoException extends java.lang.Exception {
     public PreRequisitoNoAprobadoException(String mensaje) {
         super(mensaje); //Llama al constructor de la clase padre (AcademicoException) para establecer el mensaje de error
     }
 }
 
 //Excepción para manejar el caso en que un estudiante intente inscribirse a una materia a la misma hora que otra materia en la que ya está inscrito
-class HorarioConflictivoException extends AcademicoException {
+class HorarioConflictivoException extends java.lang.Exception {
     public HorarioConflictivoException(String mensaje) {
         super(mensaje); //Igual que las otras excepciones
     }
 }
 
 //Excepcion para manerjar el caso en que un estudiante intente registrar una clase con cupo lleno
-class CupoLlenoException extends AcademicoException {
+class CupoLlenoException extends java.lang.Exception {
     public CupoLlenoException(String mensaje) {
         super(mensaje); //Igual que las otras excepciones
     }
 }
 
 //Para manejar el caso en que un estudiante no sea encontrado en el sistema al intentar realizar una acción relacionada con su cuenta
-class EstudianteNoEncontradoException extends AcademicoException {
+class EstudianteNoEncontradoException extends java.lang.Exception {
     public EstudianteNoEncontradoException(String mensaje) {
         super(mensaje); //Igual que las otras excepciones
     }
 }
 
 //Para manejar la cola de espera de una materia vacia
-class ColaDeEsperaVaciaException extends AcademicoException {
+class ColaDeEsperaVaciaException extends java.lang.Exception {
     public ColaDeEsperaVaciaException(String mensaje) {
         super(mensaje); //Igual que las otras excepciones
     }
 }
 
 //Cuando no hay nada que deshacer en la pila 
-class PilaDeshacerVaciaException extends AcademicoException {
+class PilaDeshacerVaciaException extends java.lang.Exception {
     public PilaDeshacerVaciaException(String mensaje) {
         super(mensaje); //Igual que las otras excepciones
     }
 }
 
 //Para validar extensiones de archivos .csv
-class ArchivoInvalidoException extends AcademicoException {
+class ArchivoInvalidoException extends java.lang.Exception {
     public ArchivoInvalidoException(String mensaje) {
         super(mensaje); //Igual que las otras excepciones
     }
 }
-class ArchivoNoEncontradoException extends AcademicoException{
-    public ArchivoNoEncontradoException(Strin mensaje){
+class ArchivoNoEncontradoException extends java.lang.Exception {
+    public ArchivoNoEncontradoException(String mensaje){
         super(mensaje);
     }
  }
