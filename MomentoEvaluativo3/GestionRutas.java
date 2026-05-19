@@ -36,52 +36,52 @@ public class GestionRutas {
 
     // Mediante el algoritmo de Dijkstra se calcula la ruta mas corta
     public void rutaCorta(int origen, int destino) {
-        int n = edificios.length; //Tamaño del arreglo
-        int [] distanciaMin = new int[n]; //Almacenar las distancias minimas
-        boolean [] visitado = new boolean[n]; //Lugares ya visitados
-        int [] optimizar = new int[n]; // Reformula la ruta mas corta
+        int n = edificios.length; // Tamaño del arreglo
+        int[] distanciaMin = new int[n]; // Almacenar las distancias minimas
+        boolean[] visitado = new boolean[n]; // Lugares ya visitados
+        int[] optimizar = new int[n]; // Reformula la ruta mas corta
 
-        //Distancia inicial y la distancia de origen
-        for (int i = 0; i < n; i++){
-            distanciaMin[i] = Integer.MAX_VALUE; // Esta linea de codigo define la distancia inicial como infinito; para que siempre la siguiente opcion sea menor y las mas corta.
+        // Distancia inicial y la distancia de origen
+        for (int i = 0; i < n; i++) {
+            distanciaMin[i] = Integer.MAX_VALUE; // Esta linea de codigo define la distancia inicial como infinito; para
+                                                 // que siempre la siguiente opcion sea menor y las mas corta.
             optimizar[i] = -1; // No hay otro camino mas corto
         }
 
-        distanciaMin[origen] = 0; //La distancia inicial siempre sera 0
+        distanciaMin[origen] = 0; // La distancia inicial siempre sera 0
 
-        //Proceso de Dijkstra
-        for (int i = 0; i < n; i++){
-            int edi = -1; //Variable para detectar la ruta mas corta mediante edificios
+        // Proceso de Dijkstra
+        for (int i = 0; i < n; i++) {
+            int edi = -1; // Variable para detectar la ruta mas corta mediante edificios
 
-            //Empieza la busqueda en edificios no visitados 
-            for (int j = 0; j < n; j++){
-                if (!visitado[j] && (edi == -1 || distanciaMin[j] < distanciaMin[edi])){
-                    edi = j; //Detecta el edificio con la distancia mas corta
+            // Empieza la busqueda en edificios no visitados
+            for (int j = 0; j < n; j++) {
+                if (!visitado[j] && (edi == -1 || distanciaMin[j] < distanciaMin[edi])) {
+                    edi = j; // Detecta el edificio con la distancia mas corta
                 }
             }
 
-            if (distanciaMin[edi] == Integer.MAX_VALUE){
+            if (distanciaMin[edi] == Integer.MAX_VALUE) {
                 break; // Si no hay mas edificios alcanzables, se detiene el proceso
-                visitados[edi] = true; //Registra el edificio como ya visitado
-            
-            //ACTUALIZA LAS DISTANCIAS 
-            for (int d = 0; d < n; d++){
-                //Procede a verificar que no haya conexiones juntamente con que sea menor la distancia 
-            if (distancias[edi][d] > 0 && !visitados[d] && distanciaMin[edi] + distancias[edi][d] < distanciaMin[d]){
-                distanciaMin[d] = distanciaMin[edi] + distancias[edi][d]; //Actualiza la distancia minima
-                optimizar[d] = edi; //Actualiza y registra
             }
-            
-            }
-            
+            visitado[edi] = true; // Registra el edificio como ya visitado
+
+            // ACTUALIZA LAS DISTANCIAS
+            for (int d = 0; d < n; d++) {
+                // Procede a verificar que no haya conexiones juntamente con que sea menor la
+                // distancia
+                if (distancias[edi][d] > 0 && !visitado[d]
+                        && distanciaMin[edi] + distancias[edi][d] < distanciaMin[d]) {
+                    distanciaMin[d] = distanciaMin[edi] + distancias[edi][d]; // Actualiza la distancia minima
+                    optimizar[d] = edi; // Actualiza y registra
+                }
             }
         }
 
-
-       //Resultado presentado en consola
-    System.out.println("\n------DISTANCIA DE RUTA MAS CORTA------");
-    System.out.println("Distancia de " + edificios[origen] + " a " + edificios[destino] + ": " + distanciaMin[destino] + " metros.");
+        // Resultado presentado en consola
+        System.out.println("\n------DISTANCIA DE RUTA MAS CORTA------");
+        System.out.println("Distancia de " + edificios[origen] + " a " + edificios[destino] + ": "
+                + distanciaMin[destino] + " metros.");
 
     }
-
 }
