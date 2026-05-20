@@ -57,10 +57,8 @@ public class GestionHora {
 
             //Si se encuentra ocupado, liberar el horario y actualizar el nuevo horario
             for (i = horaRequerida; i < horaRequerida + duracion; i++){
-                if (disponibilidad[diaRequerido][i] == true){
                 System.out.println("Liberando clase en: " + dias[diaRequerido] + " " + i + ":00 -> OCUPADO"); //Muestra la clase ocupada
                 disponibilidad[diaRequerido][i] = false; //Cambia el valor de la clase a libre para no generar incrongruencias
-                }
             }
 
             System.out.println("Clase liberada exitosamente en: " + nombre);
