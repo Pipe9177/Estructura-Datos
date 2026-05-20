@@ -99,10 +99,14 @@ public class Main {
 
                     case 6:
                         System.out.print("Codigo de materia a agregar pre-requisito: ");
-                        String codiReque = scanner.nextLine();
+                        String codiMat = scanner.nextLine();
                         System.out.print("Codigo Materia de pre-requisito obligatorio: ");
-                        String codiRequeObli = scanner.nextLine();
-                        sistema.agregarRequisito(codiReque, codiRequeObli);
+                        String codiReque = scanner.nextLine();
+                        try{
+                        sistema.agregarRequisito(codiMat, codiReque);
+                        } catch (java.lang.Exception e){
+                            System.out.println(e.getMessage());
+                        }
                         break;
                     
                     case 7:
@@ -148,6 +152,9 @@ public class Main {
                         int duracion = Integer.parseInt(scanner.nextLine());
                         try {
                         sistema.obtenerSalon(codSalon).reserva(dia, hora, duracion);
+
+                        //Sistema registrado para la pila de deshacer
+                        sistema.registrarHorario("RESERVAR", codSalon, dia, hora, duracion);
                         } catch (java.lang.Exception e) {
                             System.out.println("ERROR AL RESERVAR: " + e.getMessage());
                         }
@@ -166,6 +173,9 @@ public class Main {
                         int duracionLib = Integer.parseInt(scanner.nextLine());
                         try{
                         sistema.obtenerSalon(codLib).liberar(diaLib, horaLib, duracionLib); // Se asume que se libera por una hora, se puede modificar para liberar por mas horas
+
+                        //Registro para deshacer
+                        sistema.registrarHorario("LIBERAR", codLib, diaLib, horaLib, duracionLib);
                         } catch (java.lang.Exception e) {
                             System.out.println("ERROR AL LIBERAR: " + e.getMessage());
                         }
@@ -192,6 +202,7 @@ public class Main {
                         System.out.print("Distancia en metros: ");
                         int distancia = Integer.parseInt(scanner.nextLine());
                         rutas.registrarConexion(origen, destino, distancia);
+                        sistema.registrarRutas(origen, destino, distancia);
                         break;
                     
                     case 15:
@@ -213,8 +224,12 @@ public class Main {
                         int mateNotas = Integer.parseInt(scanner.nextLine());
                         System.out.print("Calificacion ( 0.0 - 5.0) : ");
                         double caliNotas = Double.parseDouble(scanner.nextLine());
+                        System.out.print("Confirme el nombre de la materia: ");
+                        String nombreMateria = scanner.nextLine();
                         try{
-                        sistema.buscarEstudiante(idNotas).registrarNota(semeNotas, mateNotas, caliNotas);
+                        Estudiante estu = sistema.buscarEstudiante(idNotas);
+                        estu.registrarNota(semeNotas, mateNotas, caliNotas, nombreMateria);
+
                         System.out.println("Nota registrada exitosamente para el estudiante con ID: " + idNotas);
                         } catch (java.lang.Exception e){
                             System.out.println("ERROR AL INGRESAR NOTAS" + e.getMessage());
@@ -246,6 +261,7 @@ public class Main {
                         if (opNavegacion == 1){
                             System.out.print("Nombre del reporte a visualizar: ");
                             String nomReporte = scanner.nextLine();
+                            sistema.registrarNavegacion(nomReporte);
                             sistema.verReporte(nomReporte);
                         } else if (opNavegacion == 2){
                             sistema.navegarAtras();
@@ -260,16 +276,18 @@ public class Main {
 
                     case 19:
                         try{
-                        sistema.deshacer();
-                        } catch (java.lang.Exception e) {
+                        System.out.println("\nDeshaciendo la ultima accion: ");
+                        sistema.deshacer(rutas);
+                        } catch (PilaDeshacerVaciaException e) {
                             System.out.println("Error al deshacer: " + e.getMessage());
                         }
                         break;
                     
                     case 20:
                         try{
-                        sistema.rehacer();
-                        } catch (java.lang.Exception e) {
+                        System.out.println("Rehaciendo la ultima accion: ");
+                        sistema.rehacer(rutas);
+                        } catch (PilaDeshacerVaciaException e) {
                             System.out.println("Error al rehacer: " + e.getMessage());
                         }
                         break;
@@ -300,8 +318,7 @@ public class Main {
                 System.out.print("\nPresione 'ENTER' para volver a desplegar el menu.");
                 scanner.nextLine();
             }
-        } while (op != 22); {
-            
-        }
+        } while (op != 22); 
+
     }
 }
