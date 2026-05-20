@@ -1,3 +1,6 @@
 //ARCHIVO CREADO PARA NO VISUALIZAR LOS ARCHIVOS .CLASS
 
 *.class
+
+//Comando para correr el programa: java MomentoEvaluativo3.Main
+//Comando para comprobar si hay errores: javac MomentoEvaluativo3/*.java
